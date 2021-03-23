@@ -1,7 +1,6 @@
 
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
 def transform_zillow(path):
     '''
@@ -32,9 +31,7 @@ def transform_zillow(path):
 
     # imputing missing Rent values
     fill_rents = fill_rents.reset_index().pivot(index = 'Date',columns = 'Zipcode')['Rent'].reset_index()
-    for code in fill_rents.columns[1:]:
-        fill_rents[code].interpolate(inplace = True)
-    fill_rents.fillna(method = 'bfill',inplace = True)
+    fill_rents.fillna(method = 'ffill',inplace = True)
     fill_rents = pd.melt(fill_rents, id_vars='Date', 
                                       value_vars = fill_rents.columns[1:],
                                       var_name='Zipcode',value_name = 'Rent')
