@@ -40,7 +40,14 @@ def transform_zillow(path):
 
     #parsing year separately for merging with annual features
     dataframe['Year'] = dataframe['Date'].dt.year
+    
+    date_cut = '2015-01-01'
+    dataframe = dataframe[dataframe['Date']>=date_cut]
 
+    nulls_df = dataframe[dataframe['Rent'].isnull()]
+    bad_zips = nulls_df['Zipcode'].unique().tolist()
+    dataframe = dataframe[dataframe['Zipcode'].isin(bad_zips)==False]
+    
     return(dataframe)
 
 
