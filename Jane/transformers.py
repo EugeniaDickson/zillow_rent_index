@@ -112,7 +112,9 @@ def transform_pers_income(path):
 
     dataframe['Year'] = pd.to_datetime(dataframe['Year']).dt.year
 
-    dataframe.rename(columns={'MetroArea':'City'}, inplace=True)
+    dataframe.rename(columns={'MetroArea':'State'}, inplace=True)
+    state_map = {'Austin':'TX','Miami':'FL','New York':'NY','San Francisco':'CA'}
+    dataframe['State'] = dataframe['State'].apply(lambda x: state_map[x])
 
     return(dataframe)
 
