@@ -141,6 +141,12 @@ def transform_income_level(path):
                                 'vol':'Vol',
                                 'vol_unadj':'VolUnadjusted',
                                 '   income_level_group':'IncomeLevelGroup'}, inplace=True)
+    
+    inclvl_moderate = dataframe[dataframe.income_level_group == 'Moderate'][['Date','Vol']]
+    inclvl_moderate = inclvl_moderate.rename(columns={'Vol':'Vol_moderate_income'})
+    inclvl_low = dataframe[dataframe.income_level_group == 'Low'][['Date','Vol']]
+    inclvl_low = inclvl_low.rename(columns={'Vol':'Vol_low_income'})
+    dataframe = pd.merge(inclvl_moderate,inclvl_low,on='Date')
 
     return(dataframe)
 
