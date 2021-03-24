@@ -111,7 +111,15 @@ def transform_air_qual(path):
     dataframe['State'] = dataframe['State'].apply(lambda x: state_map[x] if x in state_map else x)
     dataframe['State-County'] = dataframe['State'] + '-' + dataframe['County']
     dataframe = dataframe[dataframe['State-County'].isin(all_counties)]
-
+    
+    nyc_avg = dataframe[dataframe.City=='New York'].groupby('Date').mean().reset_index()
+    nyc_avg['State'] = 'NY'
+    nyc_avg['City'] = 'New York'
+    nyc_aq = pd.concat((nyc_avg,nyc_avg,nyc_avg))
+    counties = ['New York']*129+['Kings']*129+['Richmond']*129
+    nyc_aq['County']= counties
+    nyc_aq = nyc_aq[['State','County','City','AQIMean','Date']]
+    dataframe = pd.concat((dataframe,nyc_aq)).groupby(['Date','State','County']).mean().reset_index()
     return(dataframe)
 
 
