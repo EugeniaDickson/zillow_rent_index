@@ -116,7 +116,7 @@ def transform_air_qual(path):
     nyc_avg['State'] = 'NY'
     nyc_avg['City'] = 'New York'
     nyc_aq = pd.concat((nyc_avg,nyc_avg,nyc_avg))
-    counties = ['New York']*129+['Kings']*129+['Richmond']*129
+    counties = ['New York County']*129+['Kings County']*129+['Richmond County']*129
     nyc_aq['County']= counties
     nyc_aq = nyc_aq[['State','County','City','AQIMean','Date']]
     dataframe = pd.concat((dataframe,nyc_aq)).groupby(['Date','State','County']).mean().reset_index()
