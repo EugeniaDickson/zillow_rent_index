@@ -2,6 +2,23 @@
 import pandas as pd
 import numpy as np
 
+# SF Metro
+sf_counties = ['Alameda County', 'Contra Costa County', 'Marin County', 'Napa County', 'San Mateo County', 
+               'Santa Clara County', 'Solano County', 'Sonoma County', 'San Francisco County']
+# NY Metro:
+ny_counties = ['New York County', 'Bronx County', 'Queens County', 'Kings County', 'Richmond County']
+# Greater Austin Metro:
+tx_counties = ['Travis County']
+# Miami Metro:
+mia_counties = ['Miami-Dade County', 'Broward County', 'Palm Beach County']
+
+counties_dict = {'CA':sf_counties,'NY':ny_counties,'TX':tx_counties,'FL':mia_counties}
+
+all_counties = []
+for state,counties in counties_dict.items():
+    for county in counties:
+        all_counties.append('%s-%s' % (state,county))
+
 def transform_zillow(path):
     '''
     Transforms the Zillow ZRI data file:
@@ -48,6 +65,8 @@ def transform_zillow(path):
     bad_zips = nulls_df['Zipcode'].unique().tolist()
     dataframe = dataframe[dataframe['Zipcode'].isin(bad_zips)==False]
     
+    dataframe['State-County'] = dataframe['State'] + '-' + dataframe['County']
+    dataframe = dataframe[dataframe['State-County'].isin(all_counties)]
     return(dataframe)
 
 
@@ -85,6 +104,13 @@ def transform_air_qual(path):
                                 'County Name': 'County', 
                                 'City Name':'City',
                                 'Arithmetic Mean':'AQIMean'}, inplace=True)
+    
+    
+    dataframe['County'] = dataframe['County'] + ' County'
+    state_map = {'Florida':'FL','California':'CA','New York':'NY','Texas':'TX'}
+    dataframe['State'] = dataframe['State'].apply(lambda x: state_map[x] if x in state_map else x)
+    dataframe['State-County'] = dataframe['State'] + '-' + dataframe['County']
+    dataframe = dataframe[dataframe['State-County'].isin(all_counties)]
 
     return(dataframe)
 
