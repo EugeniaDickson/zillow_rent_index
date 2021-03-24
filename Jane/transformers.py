@@ -247,17 +247,11 @@ def join_dfs(zillow_df,air_df=None,persinc_df=None,inclvl_df=None,census_df=None
         pass
         
     if persinc_df is not None:
-        print(len(zillow_df))
         zillow_df=pd.merge(zillow_df,persinc_df,on=['Year','State'],how='left')
-        print(len(zillow_df))
         
     if inclvl_df is not None:
-        print(len(zillow_df))
         zillow_df=pd.merge(zillow_df,inclvl_df,on=['Date'],how='left')
-        print(len(zillow_df))
         
     if census_df is not None:
-        print(len(zillow_df))
         zillow_df=pd.merge(zillow_df,census_df,on=['Zipcode'],how='left')
-        print(len(zillow_df))
     return zillow_df
