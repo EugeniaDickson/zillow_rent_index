@@ -159,7 +159,7 @@ def transform_census(path):
         time: Year
         location: Zipcode
 
-    Feature Name: 'Vol',  'VolUnadjusted',  'IncomeLevelGroup'
+    Feature Name: plethora of features
     ----------------------------------------------------------
     SQL Query to retrieve the data from BigQuery:
 
@@ -178,6 +178,34 @@ def transform_census(path):
     dataframe['zip_code'] = dataframe['zip_code'].str.zfill(5)
     dataframe.rename(columns={'zip_code':'Zipcode'}, inplace=True)
     dataframe['do_date'] = pd.to_datetime(dataframe['do_date'])
+
+    dataframe = dataframe[['do_date','total_pop','households','median_age','median_income','income_per_capita',
+                  'pop_determined_poverty_status', 'poverty','gini_index','housing_units',
+                  'different_house_year_ago_different_city','different_house_year_ago_same_city',
+                  'pop_in_labor_force','aggregate_travel_time_to_work','bachelors_degree','employed_pop',
+                  'unemployed_pop', 'employed_arts_entertainment_recreation_accommodation_food','Zipcode']]
+
+    # pct poverty
+    dataframe['pct_poverty'] = dataframe['poverty']/dataframe['pop_determined_poverty_status']
+    dataframe.drop(['poverty','pop_determined_poverty_status'],axis=1,inplace=True)
+    # estimated number of homes for each household (scarse? or many available?)
+    dataframe['housing_availability'] = dataframe['housing_units']/dataframe['households']
+    # estimated number of people per household
+    dataframe['home_density'] = dataframe['total_pop']/dataframe['households']
+    dataframe['pct_employed'] = dataframe['employed_pop']/dataframe['pop_in_labor_force']
+    dataframe['pct_jobs_nightlife'] = dataframe['employed_arts_entertainment_recreation_accommodation_food']/dataframe['employed_pop']
+    dataframe['pct_unemployed'] = dataframe['unemployed_pop']/dataframe['pop_in_labor_force']
+    # have moved from somewhere else in the same city
+    dataframe['move_within_city'] = dataframe['different_house_year_ago_same_city']/dataframe['total_pop']
+    # have moved to this city from a new city
+    dataframe['move_new_city'] = dataframe['different_house_year_ago_different_city']/dataframe['total_pop']
+    dataframe['avg_commute_time'] = dataframe['aggregate_travel_time_to_work'] / dataframe['employed_pop']
+    dataframe.drop(['pop_in_labor_force','housing_units','employed_pop','employed_arts_entertainment_recreation_accommodation_food','unemployed_pop',
+              'different_house_year_ago_same_city','different_house_year_ago_different_city','aggregate_travel_time_to_work'],axis=1,inplace=True)
+    # percent of population w/ bachelors degree
+    dataframe['pct_college'] = dataframe['bachelors_degree'] / dataframe['total_pop']
+    dataframe.drop('bachelors_degree',axis=1,inplace=True)
+
     return(dataframe)
 
 def join_dfs(zillow_df,air_df=None,persinc_df=None,inclvl_df=None,census_df=None):
