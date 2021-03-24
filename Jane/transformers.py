@@ -171,5 +171,25 @@ def transform_census(path):
     dataframe = pd.read_csv(path, dtype={'zip_code':str})
     dataframe['zip_code'] = dataframe['zip_code'].str.zfill(5)
     dataframe.rename(columns={'zip_code':'Zipcode'}, inplace=True)
-
+    dataframe['do_date'] = pd.to_datetime(dataframe['do_date'])
     return(dataframe)
+
+def join_dfs(zillow_df,air_df=None,persinc_df=None,inclvl_df=None,census_df=None):
+    if air_df is not None:
+        pass
+        
+    if persinc_df is not None:
+        print(len(zillow_df))
+        zillow_df=pd.merge(zillow_df,persinc_df,on=['Year','State'],how='left')
+        print(len(zillow_df))
+        
+    if inclvl_df is not None:
+        print(len(zillow_df))
+        zillow_df=pd.merge(zillow_df,inclvl_df,on=['Date'],how='left')
+        print(len(zillow_df))
+        
+    if census_df is not None:
+        print(len(zillow_df))
+        zillow_df=pd.merge(zillow_df,census_df,on=['Zipcode'],how='left')
+        print(len(zillow_df))
+    return zillow_df
