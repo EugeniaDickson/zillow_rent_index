@@ -255,3 +255,19 @@ def join_dfs(zillow_df,air_df=None,persinc_df=None,inclvl_df=None,census_df=None
     if census_df is not None:
         zillow_df=pd.merge(zillow_df,census_df,on=['Zipcode'],how='left')
     return zillow_df
+
+def impute_by_county(df,colname,method):
+    '''
+    Returns series with missing values imputed by specifed method.
+
+    Args:
+        df: pd.Dataframe, Dataframe to pass in
+        Series: str, column name in df
+        method: str, Central tendency method by which to impute (examples: “mean”,“median”)
+
+    '''
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError('df argument must be of type pd.DataFrame')
+    if not isinstance(colname, str):
+        raise TypeError('Series but be the column name as a string')
+    return df[colname].fillna(df.groupby(['City','State','County'])[colname].transform(method))
