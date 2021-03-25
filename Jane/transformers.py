@@ -52,7 +52,7 @@ def transform_zillow(path):
     fill_rents = pd.melt(fill_rents, id_vars='Date', 
                                       value_vars = fill_rents.columns[1:],
                                       var_name='Zipcode',value_name = 'Rent')
-    dataframe.drop('Rent', axis = 1, inplace = True)
+    dataframe.drop(['Rent', 'RegionID'], axis = 1, inplace = True)
     dataframe = pd.merge(dataframe, fill_rents, on = ['Date','Zipcode'])
 
     #parsing year separately for merging with annual features
@@ -211,9 +211,9 @@ def transform_census(path):
     dataframe = pd.read_csv(path, dtype={'zip_code':str})
     dataframe['zip_code'] = dataframe['zip_code'].str.zfill(5)
     dataframe.rename(columns={'zip_code':'Zipcode'}, inplace=True)
-    dataframe['do_date'] = pd.to_datetime(dataframe['do_date'])
+    # dataframe['do_date'] = pd.to_datetime(dataframe['do_date'])
 
-    dataframe = dataframe[['do_date','total_pop','households','median_age','median_income','income_per_capita',
+    dataframe = dataframe[['total_pop','households','median_age','median_income','income_per_capita',
                   'pop_determined_poverty_status', 'poverty','gini_index','housing_units',
                   'different_house_year_ago_different_city','different_house_year_ago_same_city',
                   'pop_in_labor_force','aggregate_travel_time_to_work','bachelors_degree','employed_pop',
@@ -268,6 +268,8 @@ def impute_by_county(df,colname,method):
     '''
     if not isinstance(df, pd.DataFrame):
         raise TypeError('df argument must be of type pd.DataFrame')
+
     if not isinstance(colname, str):
         raise TypeError('Series but be the column name as a string')
+
     return df[colname].fillna(df.groupby(['City','State','County'])[colname].transform(method))
