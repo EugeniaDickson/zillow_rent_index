@@ -11,3 +11,12 @@ airqual_data = transform_air_qual(airqual_path)
 persinc_data = transform_pers_income(persinc_path)
 inclvl_data = transform_income_level(inclvl_path)
 census_data = transform_census(census_path)
+
+zillow_full = join_dfs(
+						zillow_data,
+						airqual_data,
+						persinc_data,
+						inclvl_data,
+						census_data
+						)
+print('Your data is ready! Merged table name is zillow_full')
