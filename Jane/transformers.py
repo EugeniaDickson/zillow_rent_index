@@ -244,7 +244,7 @@ def transform_census(path):
 
 def join_dfs(zillow_df,air_df=None,persinc_df=None,inclvl_df=None,census_df=None):
     if air_df is not None:
-        pass
+        zillow_df=pd.merge(zillow_df,air_df,on=['Date','State','County'],how='left')
         
     if persinc_df is not None:
         zillow_df=pd.merge(zillow_df,persinc_df,on=['Year','State'],how='left')
