@@ -272,4 +272,4 @@ def impute_by_county(df,colname,method):
     if not isinstance(colname, str):
         raise TypeError('Series but be the column name as a string')
 
-    return df[colname].fillna(df.groupby(['City','State','County'])[colname].transform(method))
+    return df[colname].fillna(df.groupby(['Date','City','State','County'])[colname].transform(method))
