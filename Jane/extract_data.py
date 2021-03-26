@@ -20,11 +20,11 @@ zillow_full = join_dfs(
 						census_data
 						)
 
-#Imputation missing numerical values with county mean
+# Imputation missing numerical values with county mean
 numeric_cols = zillow_full.select_dtypes(exclude = ["object"]).columns.tolist()
 null_data = zillow_full[numeric_cols].isnull().sum()
 null_cols = null_data[null_data >=1 ].index.tolist()
 for col in null_cols:
     zillow_full[col] = impute_by_county(zillow_full, col, 'mean')
 
-print('Your data is ready! Merged table name is zillow_full')
+print('Your data is ready! Merged table name is zillow_full.')
