@@ -101,7 +101,7 @@ def randForest(model,Xtrain,Xtest,ytrain,ytest):
     print(f'training R2: {model.score(Xtrain,ytrain)}')
     print(f'test R2: {model.score(Xtest,ytest)}')
     
-    ypred = rfc.predict(Xtest)
+    ypred = model.predict(Xtest)
     RMSE = mean_squared_error(np.exp(ytest),np.exp(ypred),squared=False)
 #     RMSE = mean_squared_error(ytest,ypred, squared = False)
     print(f'RMSE: {RMSE}')
