@@ -11,7 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 feature_cols = ['Rent','State-County','State','Year',
-                             'City','Metro','County','Zipcode','SizeRank']
+                             'City','Metro','County','Zipcode','SizeRank','pct_unemployed']
 
 def forest_regressor(df, datestr):
     '''Returns a fit Random Forest model, the testing features, and the testing targets
