@@ -80,14 +80,13 @@ def featurePlotPCA(df, figure_size = (8,5), df_name='features'):
     pca = PCA(n_components=df.shape[1]) 
     components = pca.fit_transform(df)
     idx = df.columns.to_list() # indices of original col names
-    dot_matrix = pd.DataFrame(np.dot(df.T,components),columns=['PC'+str(i) for i in range(1,len(idx)+1)],
-                         index = idx)
-    
-    df_norm = (dot_matrix.copy()-dot_matrix.mean())/dot_matrix.std() # normalized
-    df_abs = df_norm.copy().abs() # absolute value
+    cols = ['PC'+str(i) for i in range(1,len(idx)+1)]
+    dot_matrix = pd.DataFrame(np.dot(df.T,components),
+                         index = idx, columns = cols)
+    df_abs = dot_matrix.copy().abs() # absolute value
     
     plt.figure(figsize=figure_size)
-    heatmap = sns.heatmap(df_abs, cmap="Purples")
+    heatmap = sns.heatmap(df_abs, cmap="GnBu", vmin=0, vmax=1, linewidths=.5)
     titl = "|Z-Normalized| Feature Importances for {} PCA".format(df_name)
     heatmap.set_title(titl)
     plt.show()
